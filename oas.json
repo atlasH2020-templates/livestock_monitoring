@@ -1,0 +1,211 @@
+openapi: "3.0.0"
+info:
+  description: "The dataset describes the behaviour of a group of animals or individual animals and is the foundation for DSS informing the farmer about behaviour anomalies of the animals."
+  title: "Livestock Monitoring"
+  version: "0.1.1"
+  
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "jacob.livin.stanly@iais.fraunhofer.de"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+
+tags:
+- name: "get_timeseries_activity"
+  description: "***Mandatory*** Endpoint"
+ 
+- name: "get_discrete_events"
+  description: "***Mandatory*** Endpoint"
+
+
+paths:
+  /livestock/getTimeSeries:
+    get:
+      tags:
+        - "get_timeseries_activity"
+      summary: "Get Livestock Monitoring Activity Entry"
+      description: "Returns Time Series which captures the activity pattern of the livestock"
+      operationId: "getLiveStockMonitoring"
+      
+      parameters:
+        - in: query
+          name: start_time
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: end_time
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: resolution
+          schema:
+            type: string
+          required: true
+          
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LivestockMonitoringTS'
+        400:
+          description: Invalid status value
+          content: {}
+      
+
+  /livestock/discreteEvents:
+    get:
+      tags:
+        - "get_discrete_events"
+      summary: "Get Livestock Discrete Event Entry"
+      parameters:
+        - in: query
+          name: start_time
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: end_time
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LivestockMonitoringDE'   
+      
+  
+
+components:
+  schemas:
+    LivestockMonitoringTS:
+      required:
+        - startTime
+        - endTime
+        - confidence
+        - activity
+        - eatingActivity
+        - biometricParameters
+        - groupID
+      type: "object"
+      properties:
+        startTime:
+          type: string
+          example:
+            "2020-12-16T01:12:28.414Z"
+        endTime:
+          type: string
+          example:
+            "2020-12-17T01:12:28.414Z"
+        description:
+          type: string
+        confidence:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date-time
+            additionalProperties:
+              type: number
+              format: decimal
+          example:
+              ["2020-12-16T01:12:28.414Z" : .75, "2020-12-17T01:12:28.414Z" : .65]
+        activity:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                  type: string
+                  format: date-time
+            additionalProperties:
+              type: number
+              format: decimal
+          example:
+              ["2020-12-16T01:12:28.414Z" : 15.0, "2020-12-17T01:12:28.414Z" : 16.0]
+        eatingActivity:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date-time
+            additionalProperties:
+              type: number
+              format: decimal
+          example:
+            ["2020-12-16T01:12:28.414Z" : 5, "2020-12-17T01:12:28.414Z" : 10]
+        biometricParameters:
+          $ref: '#/components/schemas/BioMetricParams'
+        animalID:
+          type: string
+          example:
+        groupID:
+          type: string
+          example: "ID23"
+    
+    LivestockMonitoringDE:
+      required:
+        - confidence
+        - startTime
+        - endTime
+        - eventType
+        - timeStamp
+        - groupID
+      type: object
+      properties:
+        startTime:
+          type: string
+        endTime:
+          type: string
+        description:
+          type: string
+        confidence:
+          type: number
+          format: decimal
+        eventType:
+          type: string
+        subParameter:
+          type: string
+        timeStamp:
+          type: string
+          format: date-time
+        animalID:
+          type: string
+        groupID:
+          type: string
+        
+      
+
+    BioMetricParams:
+      type: "object"
+      properties:
+        aggressionEvents:
+          type: number
+          format: integer
+        temperature:
+          type: number
+          format: decimal
+        weight:
+          type: number
+          format: decimal
+        noiseLevel:
+          type: number
+          format: integer
+        animalSize:
+          type: number
+          format: integer
