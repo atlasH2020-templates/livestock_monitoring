@@ -1,0 +1,106 @@
+<html>
+<head>
+    <style type="text/css">
+        body { font-family: courier, courier new, monospace; font-size:12px; margin-left: 42px; width: 465px; white-space: pre-line; }
+        h2 { margin: 10px 0 0 -22px; font-size:12px; padding: 0 !important }
+        table { font-size: 10px; margin-left: -22px; width: 450px; }
+        div.header { padding: 0; margin: 0 0 0 -22px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+ATLAS Service Template Specification
+Name                                         livestock_monitoring
+Version                                                       0.2
+Author(s)      Jacob Livin Stanly, Mark Hoffmann (Fraunhofer IAIS)
+</div>
+
+<h2>The "livestock_monitoring" ATLAS Service Template</h2>
+<div style="margin-left: -22px;">
+
+<h1>Abstract</h1>
+The purpose of this service template specifications document is to provide a technology-agnostic overview of the livestock monitoring template. It describes a well-defined baseline of the service by clearly identifying the service version.
+The document describes the shared functional aspects of any service instance implementing the livestock monitoring template, the operational and business context of such services, possible requirements, relations to other services and validation aspects.
+</div>
+
+<h2>Intended audience</h2>
+ATLAS software vendors, participants, who want to to provide an ATLAS livestock monitoring service instance, or who wish to consume ATLAS livestock monitoring service instances.
+
+
+<h2>Functional overview</h2>
+Services implementing the livestock monitoring template will monitor the behavior of the livestock based on sensor data and the template is species agnostic. Examples of sensor data would be:
+<ul>
+    <li>Video</li> 
+    <li>Noise</li>
+    <li>Accelerometers</li>
+    <li>etc.</li>
+</ul>
+Service MAY calculate time series data for the following:
+<ul>
+    <li>Activity Level</li>
+    <li>Eating Activity</li>
+    <li>Aggression Level</li>
+    <li>Temperature</li>
+    <li>Weight</li>
+    <li>Noise Level</li>
+    <li>Animal Size</li>
+</ul>
+The time series data would be provided for either a group of animals or individual animals.
+Service MAY capture discrete event data out of the following events:
+<ul>
+    <li>Animal Death</li>
+    <li>Aggression Events</li>
+</ul>
+
+
+<h2>Operational Context</h2>
+
+Livestock monitoring service communicates with the video storage service and the visualization service in order to deliver the analysis services to the end consumer. The Livestock monitoring services subscribes to be notified whenever a new video arrives in the video storage service. Once the new video arrives arrives, the livestock monitoring service receives a notification and downloads the video and starts generating the analysis results. Once the analysis results are generated these are available to the visualization service to be queried.
+
+<img src="doc/operational_context.png" style="width: 420px" />
+
+<h2>Service template API</h2>
+This section provides an abstract overview of the service template API. The detailed OpenAPI specifications can be found in the service registry.
+<h4>Endpoints</h4>
+<h4>get_timeseries_activity</h4>
+Inputs:
+<ul>
+<li>Start time</li>
+<li>End time</li>
+<li>resolution</li>
+</ul>
+Outputs:
+<ul>
+<li>start time</li>
+<li>end time</li>
+<li>confidence</li>
+<li>activity</li>
+<li>eating activity</li>
+<li>biometric params</li>
+</ul>
+
+
+get_discrete_events
+Inputs:
+<ul>
+<li> start time </li>
+<li> end time </li>
+</ul>
+Outputs:
+<ul>
+    <li>start time</li>
+    <li>end time</li>
+    <li>confidence</li>
+    <li>eventType</li>
+    <li>timestamp</li>
+    <li>subparameter</li>
+    <li>animal id</li>
+    <li>pen urn</li>
+</ul>
+
+<h2>Data model</h2>
+The detailed data models, with examples can be found in the adjoining OpenAPI specifications.
+
+</body>
+</html>
