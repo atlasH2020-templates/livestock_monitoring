@@ -132,8 +132,8 @@ components:
                   additionalProperties:
                     type: number
                     format: decimal
-              example:
-                ["2020-12-16T01:12:28.414Z" : 15.0, "2020-12-17T01:12:28.414Z" : 16.0]
+                example:
+                  ["2020-12-16T01:12:28.414Z" : 15.0, "2020-12-17T01:12:28.414Z" : 16.0]
 
     # LivestockMonitoringTS:
     #   required:
