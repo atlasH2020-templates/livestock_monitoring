@@ -1,8 +1,8 @@
 openapi: "3.0.0"
 info:
-  description: "The dataset describes the behaviour of a group of animals or individual animals and is the foundation for DSS informing the farmer about behaviour anomalies of the animals."
-  title: "Livestock Monitoring"
-  version: "0.1.1"
+  description: "The data returned by the service describes the activity of a group of animals or individual animals inside a pen"
+  title: "livestock_monitoring API"
+  version: "1.0.0"
   
   termsOfService: "http://swagger.io/terms/"
   contact:
@@ -12,18 +12,18 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 
 tags:
-- name: "get_timeseries_activity"
+- name: "timeseries_activity"
   description: "***Mandatory*** Endpoint"
  
-- name: "get_discrete_events"
-  description: "***Mandatory*** Endpoint"
+- name: "discrete_events"
+  description: "***Optional*** Endpoint"
 
 
 paths:
-  /livestock/getTimeSeries:
+  /livestock/timeseries:
     get:
       tags:
-        - "get_timeseries_activity"
+        - "timeseries_activity"
       summary: "Get Livestock Monitoring Activity Entry"
       description: "Returns Time Series which captures the activity pattern of the livestock"
       operationId: "getLiveStockMonitoring"
@@ -44,6 +44,17 @@ paths:
           schema:
             type: string
           required: true
+        - in: query
+          name: penID
+          schema:
+            type: array
+          required: true
+        - in: query
+          name: activity_type
+          schema:
+            type: array
+          required: false
+        
           
       responses:
         200:
@@ -62,7 +73,7 @@ paths:
   /livestock/discreteEvents:
     get:
       tags:
-        - "get_discrete_events"
+        - "discrete_events"
       summary: "Get Livestock Discrete Event Entry"
       parameters:
         - in: query
@@ -85,78 +96,97 @@ paths:
                 items:
                   $ref: '#/components/schemas/LivestockMonitoringDE'   
       
-  
 
 components:
   schemas:
     LivestockMonitoringTS:
       required:
-        - startTime
-        - endTime
-        - confidence
-        - activity
-        - eatingActivity
-        - biometricParameters
-        - groupID
+        - timeseries
       type: "object"
       properties:
-        startTime:
-          type: string
-          example:
-            "2020-12-16T01:12:28.414Z"
-        endTime:
-          type: string
-          example:
-            "2020-12-17T01:12:28.414Z"
-        description:
-          type: string
-        confidence:
+        timeseries:
           type: array
           items:
             type: object
             properties:
-              date:
+              pen_id:
+                type: string
+              start_date:
                 type: string
                 format: date-time
-            additionalProperties:
-              type: number
-              format: decimal
-          example:
-              ["2020-12-16T01:12:28.414Z" : .75, "2020-12-17T01:12:28.414Z" : .65]
-        activity:
-          type: array
-          items:
-            type: object
-            properties:
-              date:
-                  type: string
-                  format: date-time
-            additionalProperties:
-              type: number
-              format: decimal
-          example:
-              ["2020-12-16T01:12:28.414Z" : 15.0, "2020-12-17T01:12:28.414Z" : 16.0]
-        eatingActivity:
-          type: array
-          items:
-            type: object
-            properties:
-              date:
+              end_date:
                 type: string
                 format: date-time
-            additionalProperties:
-              type: number
-              format: decimal
-          example:
-            ["2020-12-16T01:12:28.414Z" : 5, "2020-12-17T01:12:28.414Z" : 10]
-        biometricParameters:
-          $ref: '#/components/schemas/BioMetricParams'
-        animalID:
-          type: string
-          example:
-        groupID:
-          type: string
-          example: "ID23"
+              activity_type:
+                type: string
+              unit:
+                type: string
+              timeseries_data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                        type: string
+                        format: date-time
+                  additionalProperties:
+                    type: number
+                    format: decimal
+
+    # LivestockMonitoringTS:
+    #   required:
+    #     - startTime
+    #     - endTime
+    #     - activity
+    #     - eatingActivity
+    #     - biometricParameters
+    #     - penID
+    #   type: "object"
+    #   properties:
+    #     startTime:
+    #       type: string
+    #       example:
+    #         "2020-12-16T01:12:28.414Z"
+    #     endTime:
+    #       type: string
+    #       example:
+    #         "2020-12-17T01:12:28.414Z"
+    #     description:
+    #       type: string
+    #     activity:
+    #       type: array
+    #       items:
+    #         type: object
+    #         properties:
+    #           date:
+    #               type: string
+    #               format: date-time
+    #         additionalProperties:
+    #           type: number
+    #           format: decimal
+    #       example:
+    #           ["2020-12-16T01:12:28.414Z" : 15.0, "2020-12-17T01:12:28.414Z" : 16.0]
+    #     eatingActivity:
+    #       type: array
+    #       items:
+    #         type: object
+    #         properties:
+    #           date:
+    #             type: string
+    #             format: date-time
+    #         additionalProperties:
+    #           type: number
+    #           format: decimal
+    #       example:
+    #         ["2020-12-16T01:12:28.414Z" : 5, "2020-12-17T01:12:28.414Z" : 10]        
+    #     biometricParameters:
+    #       $ref: '#/components/schemas/BioMetricParams'
+    #     animalID:
+    #       type: string
+    #       example:
+    #     penID:
+    #       type: string
+    #       example: "ID23"
     
     LivestockMonitoringDE:
       required:
@@ -165,7 +195,7 @@ components:
         - endTime
         - eventType
         - timeStamp
-        - groupID
+        - penID
       type: object
       properties:
         startTime:
@@ -186,26 +216,26 @@ components:
           format: date-time
         animalID:
           type: string
-        groupID:
+        penID:
           type: string
         
       
 
-    BioMetricParams:
-      type: "object"
-      properties:
-        aggressionEvents:
-          type: number
-          format: integer
-        temperature:
-          type: number
-          format: decimal
-        weight:
-          type: number
-          format: decimal
-        noiseLevel:
-          type: number
-          format: integer
-        animalSize:
-          type: number
-          format: integer
+    # BioMetricParams:
+    #   type: "object"
+    #   properties:
+    #     aggressionEvents:
+    #       type: number
+    #       format: integer
+    #     temperature:
+    #       type: number
+    #       format: decimal
+    #     weight:
+    #       type: number
+    #       format: decimal
+    #     noiseLevel:
+    #       type: number
+    #       format: integer
+    #     animalSize:
+    #       type: number
+    #       format: integer
