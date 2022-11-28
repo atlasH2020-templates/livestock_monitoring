@@ -41,18 +41,26 @@ paths:
           required: true
         - in: query
           name: resolution
+          description: Frequency of the time series data points in seconds 
           schema:
             type: string
+            
           required: true
         - in: query
           name: penID
+          description: The urn of a monitored pen. Syntax&#58; urn:<service_id>:<internal_id>
           schema:
             type: array
+            items:
+              type: string
           required: true
         - in: query
           name: activity_type
+          description: One of the following values &#58; eating, resting, movement
           schema:
             type: array
+            items:
+              type: string
           required: false
         
           
@@ -64,7 +72,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/LivestockMonitoringTS'
+                  $ref: '#/components/schemas/TimeSeries'
         400:
           description: Invalid status value
           content: {}
@@ -94,46 +102,73 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/LivestockMonitoringDE'   
+                  $ref: '#/components/schemas/DiscreteEvents'   
       
 
 components:
   schemas:
-    LivestockMonitoringTS:
+    TimeSeries:
       required:
         - timeseries
       type: "object"
       properties:
         timeseries:
           type: array
+          
           items:
             type: object
+            required:
+            - pen_id
+            - start_date
+            - end_date
+            - activity_type
+            - unit
+            - timeseries_data
             properties:
               pen_id:
                 type: string
+                pattern: ^urn:[a-z][a-z0-9_.\-]*:[\w-.]+
+                description: Uniform resource name of an object with the syntax urn:<service_id>:<internal_id>. <service_id> must be the urn of a valid and active ATLAS service.
               start_date:
                 type: string
                 format: date-time
               end_date:
                 type: string
                 format: date-time
+              
               activity_type:
                 type: string
+                "enum": [
+                  "eating",
+                  "resting",
+                  "movement"
+                ]
               unit:
                 type: string
+                "enum": [
+                  "number of animals"
+                ]  
               timeseries_data:
                 type: array
                 items:
                   type: object
+                  required:
+                    - date
+                    - value
                   properties:
                     date:
                         type: string
                         format: date-time
-                  additionalProperties:
-                    type: number
-                    format: decimal
+                    confidence:
+                        type: number
+                    value:
+                        type: number
+                    
+                    
                 example:
-                  ["2020-12-16T01:12:28.414Z" : 15.0, "2020-12-17T01:12:28.414Z" : 16.0]
+                  [{"date": "2020-12-16T01:12:28.414Z", "confidence": 0.5, "value" : 15.0}, 
+                    {"date": "2020-12-16T01:12:29.414Z", "confidence": 0.7, "value" : 10.0}
+                  ]
 
     # LivestockMonitoringTS:
     #   required:
@@ -190,9 +225,8 @@ components:
     #       type: string
     #       example: "ID23"
     
-    LivestockMonitoringDE:
+    DiscreteEvents:
       required:
-        - confidence
         - startTime
         - endTime
         - eventType
@@ -202,24 +236,31 @@ components:
       properties:
         startTime:
           type: string
+          format: date-time
         endTime:
           type: string
-        description:
-          type: string
+          format: date-time
         confidence:
           type: number
           format: decimal
         eventType:
           type: string
-        subParameter:
-          type: string
+          enum: [
+            "biting",
+            "coughing",
+            "death"
+          ]
         timeStamp:
           type: string
           format: date-time
         animalID:
           type: string
+          pattern: ^urn:[a-z][a-z0-9_.\-]*:[\w-.]+
+          description: Uniform resource name of an object with the syntax urn:<service_id>:<internal_id>. <service_id> must be the urn of a valid and active ATLAS service.
         penID:
           type: string
+          pattern: ^urn:[a-z][a-z0-9_.\-]*:[\w-.]+
+          description: Uniform resource name of an object with the syntax urn:<service_id>:<internal_id>. <service_id> must be the urn of a valid and active ATLAS service.
         
       
 
