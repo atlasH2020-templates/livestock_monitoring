@@ -40,6 +40,7 @@ paths:
           schema:
             type: string
           required: true
+          description: "date/time in ISO 8601 format"
         - in: query
           name: resolution
           description: Frequency of the time series data points in seconds 
