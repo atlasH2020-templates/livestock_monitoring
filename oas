@@ -34,16 +34,18 @@ paths:
           schema:
             type: string
           required: true
-          description: "date/time in ISO 8601 format"
+          description: "in ISO 8601 date/time format"
+          example: "2023-01-12T14:39:14.0000"
         - in: query
           name: end_time
           schema:
             type: string
           required: true
-          description: "date/time in ISO 8601 format"
+          description: "in ISO 8601 date/time format"
         - in: query
           name: resolution
-          description: Frequency of the time series data points in seconds 
+          description: "in ISO 8601 duration format" 
+         
           schema:
             type: string
             
