@@ -63,7 +63,7 @@ Livestock monitoring service communicates with the video storage service and the
 <h2>Service template API</h2>
 This section provides an abstract overview of the service template API. The detailed OpenAPI specifications can be found in the service registry.
 <h3>Endpoints</h3>
-<h4>get_timeseries_activity</h4>
+<h4>timeseries_activity</h4>
 Inputs:
 <ul>
 <li>Start time</li>
@@ -72,16 +72,18 @@ Inputs:
 </ul>
 Outputs:
 <ul>
-<li>start time</li>
-<li>end time</li>
-<li>confidence</li>
-<li>activity</li>
-<li>eating activity</li>
-<li>biometric params</li>
+    <li>pen_id</li>
+<li>start date</li>
+<li>end date</li>
+<li>activity type</li>
+    <li>unit</li>    
+
+<li>timeseries_data</li>
+
 </ul>
 
 
-get_discrete_events
+discrete_events
 Inputs:
 <ul>
 <li> start time </li>
@@ -94,9 +96,8 @@ Outputs:
     <li>confidence</li>
     <li>eventType</li>
     <li>timestamp</li>
-    <li>subparameter</li>
     <li>animal id</li>
-    <li>pen urn</li>
+    <li>pen id</li>
 </ul>
 
 <h2>Data model</h2>
