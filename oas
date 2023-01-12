@@ -35,20 +35,20 @@ paths:
             type: string
           required: true
           description: "in ISO 8601 date/time format"
-          example: "2023-01-12T14:39:14.0000"
+          example: "2023-01-12T14:00:00.000Z"
         - in: query
           name: end_time
           schema:
             type: string
           required: true
           description: "in ISO 8601 date/time format"
+          example: "2023-01-12T14:59:59.000Z"
         - in: query
           name: resolution
           description: "in ISO 8601 duration format" 
-         
+          example: "PT20M"         
           schema:
             type: string
-            
           required: true
         - in: query
           name: penID
@@ -174,60 +174,7 @@ components:
                     {"date": "2020-12-16T01:12:29.414Z", "confidence": 0.7, "value" : 10.0}
                   ]
 
-    # LivestockMonitoringTS:
-    #   required:
-    #     - startTime
-    #     - endTime
-    #     - activity
-    #     - eatingActivity
-    #     - biometricParameters
-    #     - penID
-    #   type: "object"
-    #   properties:
-    #     startTime:
-    #       type: string
-    #       example:
-    #         "2020-12-16T01:12:28.414Z"
-    #     endTime:
-    #       type: string
-    #       example:
-    #         "2020-12-17T01:12:28.414Z"
-    #     description:
-    #       type: string
-    #     activity:
-    #       type: array
-    #       items:
-    #         type: object
-    #         properties:
-    #           date:
-    #               type: string
-    #               format: date-time
-    #         additionalProperties:
-    #           type: number
-    #           format: decimal
-    #       example:
-    #           ["2020-12-16T01:12:28.414Z" : 15.0, "2020-12-17T01:12:28.414Z" : 16.0]
-    #     eatingActivity:
-    #       type: array
-    #       items:
-    #         type: object
-    #         properties:
-    #           date:
-    #             type: string
-    #             format: date-time
-    #         additionalProperties:
-    #           type: number
-    #           format: decimal
-    #       example:
-    #         ["2020-12-16T01:12:28.414Z" : 5, "2020-12-17T01:12:28.414Z" : 10]        
-    #     biometricParameters:
-    #       $ref: '#/components/schemas/BioMetricParams'
-    #     animalID:
-    #       type: string
-    #       example:
-    #     penID:
-    #       type: string
-    #       example: "ID23"
+   
     
     DiscreteEvents:
       required:
@@ -268,21 +215,4 @@ components:
         
       
 
-    # BioMetricParams:
-    #   type: "object"
-    #   properties:
-    #     aggressionEvents:
-    #       type: number
-    #       format: integer
-    #     temperature:
-    #       type: number
-    #       format: decimal
-    #     weight:
-    #       type: number
-    #       format: decimal
-    #     noiseLevel:
-    #       type: number
-    #       format: integer
-    #     animalSize:
-    #       type: number
-    #       format: integer
+    
