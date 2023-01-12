@@ -51,7 +51,7 @@ paths:
             type: string
           required: true
         - in: query
-          name: pen_id
+          name: pen_urn
           example: urn:com.fodjan.animal_data:12345
           description: The urn of a monitored pen. Syntax&#58; urn:<service_id>:<internal_id>
           schema:
@@ -79,7 +79,7 @@ paths:
           content: {}
       
 
-  /livestock/discreteEvents:
+  /livestock/discrete_events:
     get:
       tags:
         - "discrete_events"
@@ -87,23 +87,32 @@ paths:
       parameters:
         - in: query
           name: start_time
-          required: true
           schema:
             type: string
+          required: true
+          description: "in ISO 8601 date/time format"
+          example: "2023-01-12T14:00:00.000Z"
         - in: query
           name: end_time
-          required: true
           schema:
             type: string
+          required: true
+          description: "in ISO 8601 date/time format"
+          example: "2023-01-12T14:59:59.000Z"
+        - in: query
+          name: pen_urn
+          example: urn:com.fodjan.animal_data:12345
+          description: The urn of a monitored pen. Syntax&#58; urn:<service_id>:<internal_id>
+          schema:
+            type: string
+          required: true
       responses:
         200:
           description: "successful operation"
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/DiscreteEvents'   
+                $ref: '#/components/schemas/DiscreteEvents'   
       
 
 components:
@@ -113,11 +122,11 @@ components:
       items:
         type: object
         required:
-        - activity_type
+        - type
         - unit
         - timeseries
         properties:
-          activity_type:
+          type:
             $ref: '#/components/schemas/ActivityType'
           unit:
             type: string
@@ -143,7 +152,7 @@ components:
       example:
         [
           {
-            "activity_type": "eating",
+            "type": "eating",
             "unit": "number_of_animals",
             "timeseries": [
               {
@@ -176,42 +185,45 @@ components:
    
     
     DiscreteEvents:
-      required:
-        - startTime
-        - endTime
-        - eventType
-        - timeStamp
-        - penID
-      type: object
-      properties:
-        startTime:
-          type: string
-          format: date-time
-        endTime:
-          type: string
-          format: date-time
-        confidence:
-          type: number
-          format: decimal
-        eventType:
-          type: string
-          enum: [
-            "biting",
-            "coughing",
-            "death"
-          ]
-        timeStamp:
-          type: string
-          format: date-time
-        animalID:
-          type: string
-          pattern: ^urn:[a-z][a-z0-9_.\-]*:[\w-.]+
-          description: Uniform resource name of an object with the syntax urn:<service_id>:<internal_id>. <service_id> must be the urn of a valid and active ATLAS service.
-        penID:
-          type: string
-          pattern: ^urn:[a-z][a-z0-9_.\-]*:[\w-.]+
-          description: Uniform resource name of an object with the syntax urn:<service_id>:<internal_id>. <service_id> must be the urn of a valid and active ATLAS service.
+      type: array
+      items:
+        required:
+          - type
+          - date
+        type: object
+        properties:
+          type:
+            $ref: '#/components/schemas/EventType'
+          date:
+            type: string
+            format: date-time
+          animal_urn:
+            type: string
+            pattern: ^urn:[a-z][a-z0-9_.\-]*:[\w-.]+
+            description: Uniform resource name of an object with the syntax urn:<service_id>:<internal_id>. <service_id> must be the urn of a valid and active ATLAS service.
+          confidence:
+            type: number
+            format: decimal
+            minimum: 0
+            maximum: 1
+      example: 
+        [
+          {
+            "type": "biting",
+            "date": "2023-01-12T14:02:00.000Z",
+            "confidence": 0.5,
+          }
+        
+        ]
         
       
-
+          
+        
+      
+    EventType:
+      type: string
+      enum: 
+        - biting
+        - coughing
+        - death
     
