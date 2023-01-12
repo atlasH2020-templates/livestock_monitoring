@@ -34,6 +34,7 @@ paths:
           schema:
             type: string
           required: true
+          description: "date/time in ISO 8601 format"
         - in: query
           name: end_time
           schema:
