@@ -169,10 +169,10 @@ components:
                         type: number
                     
                     
-                example:
-                  [{"date": "2020-12-16T01:12:28.414Z", "confidence": 0.5, "value" : 15.0}, 
-                    {"date": "2020-12-16T01:12:29.414Z", "confidence": 0.7, "value" : 10.0}
-                  ]
+          example:
+            [{"date": "2020-12-16T01:12:28.414Z", "confidence": 0.5, "value" : 15.0}, 
+              {"date": "2020-12-16T01:12:29.414Z", "confidence": 0.7, "value" : 10.0}
+            ]
 
    
     
