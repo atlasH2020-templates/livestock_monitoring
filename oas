@@ -20,6 +20,9 @@ tags:
  
 - name: "discrete_events"
   description: "***Optional*** Endpoint"
+  
+- name: "discrete_events_capabilities"
+  description: "***Mandatory*** Endpoint"
 
 
 paths:
