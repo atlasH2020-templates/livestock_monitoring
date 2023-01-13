@@ -145,7 +145,7 @@ paths:
     get:
       tags:
         - "discrete_events_capabilities"
-      summary: "Get information on which type of discrete events can be returned by the service"
+      summary: "Get information on which type of discrete events can be returned by the service "
       
       responses:
         200:
