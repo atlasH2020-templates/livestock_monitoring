@@ -14,6 +14,9 @@ info:
 tags:
 - name: "timeseries_activity"
   description: "***Mandatory*** Endpoint"
+  
+- name: "timeseries_capabilities"
+  description: "***Mandatory*** Endpoint"
  
 - name: "discrete_events"
   description: "***Optional*** Endpoint"
@@ -78,6 +81,26 @@ paths:
           description: Invalid status value
           content: {}
       
+      
+      
+  /livestock/timeseries/capabilities:
+    get:
+      tags:
+        - "timeseries_capabilities"
+      summary: "Get information on which type of timeseries can be returned by the service"
+      
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityType'
+        400:
+          description: Invalid status value
+          content: {}
+        
+
 
   /livestock/discrete_events:
     get:
@@ -112,7 +135,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DiscreteEvents'   
+                $ref: '#/components/schemas/DiscreteEvents'  
+                
+                
+  /livestock/discrete_events/capabilities:
+    get:
+      tags:
+        - "discrete_events_capabilities"
+      summary: "Get information on which type of discrete events can be returned by the service"
+      
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventType'
+        400:
+          description: Invalid status value
+          content: {}
+        
       
 
 components:
