@@ -17,12 +17,17 @@ tags:
   
 - name: "timeseries_capabilities"
   description: "***Mandatory*** Endpoint"
+  
+- name: "aggregated_activity"
+  description: "***Mandatory*** Endpoint"
  
 - name: "discrete_events"
   description: "***Optional*** Endpoint"
   
 - name: "discrete_events_capabilities"
   description: "***Mandatory*** Endpoint"
+  
+
 
 
 paths:
@@ -104,6 +109,57 @@ paths:
           content: {}
         
 
+  /livestock/aggregated:
+    get:
+        tags:
+          - "aggregated_activity"
+        summary: "Get aggergated Livestock Monitoring Activity values"
+        description: "Returns the integral over the Time Series, resulting in eating minutes, etc."
+       
+        parameters:
+          - in: query
+            name: start_time
+            schema:
+              type: string
+            required: true
+            description: "in ISO 8601 date/time format"
+            example: "2023-01-12T14:00:00.000Z"
+          - in: query
+            name: end_time
+            schema:
+              type: string
+            required: true
+            description: "in ISO 8601 date/time format"
+            example: "2023-01-12T14:59:59.000Z"
+          - in: query
+            name: pen_urn
+            example: ["urn:com.fodjan.animal_data:12345", "urn:com.fodjan.animal_data:12346"]
+            description: The urns of one or several monitored pens. Syntax&#58; urn:<service_id>:<internal_id>
+            schema:
+              type: array
+              items:
+                type: string
+            required: true
+          - in: query
+            name: activity_type
+            example: "eating"
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ActivityType'
+            required: false
+          
+            
+        responses:
+          200:
+            description: "successful operation"
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Aggregation'
+          400:
+            description: Invalid status value
+            content: {}
 
   /livestock/discrete_events:
     get:
@@ -226,6 +282,45 @@ components:
         - eating
         - resting
         - movement
+        
+    
+    Aggregation:
+      type: array
+      items:
+        type: object
+        required:
+        - pen_urn
+        - type
+        - unit
+        - value
+        properties:
+          pen_urn: 
+            type: string
+          type:
+            $ref: '#/components/schemas/ActivityType'
+          unit:
+            type: string
+            "enum": [
+              "minutes"
+            ]  
+          value:
+            type: number
+                
+      example:
+        [
+          {
+            "pen_urn": "urn:com.fodjan.animal_data:12345",
+            "type": "eating",
+            "unit": "minutes",
+            "value": 23
+          },
+          {
+            "pen_urn": "urn:com.fodjan.animal_data:12346",
+            "type": "eating",
+            "unit": "minutes",
+            "value": 42
+          }
+        ]
             
    
     
@@ -263,8 +358,7 @@ components:
         
       
           
-        
-      
+       
     EventType:
       type: string
       enum: 
